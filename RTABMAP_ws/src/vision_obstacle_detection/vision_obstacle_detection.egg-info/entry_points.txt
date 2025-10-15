@@ -1,0 +1,3 @@
+[console_scripts]
+vision_obstacle_detection_node = vision_obstacle_detection.vision_obstacle_detection_node:main
+yolo_box = vision_obstacle_detection.yolo_box:main

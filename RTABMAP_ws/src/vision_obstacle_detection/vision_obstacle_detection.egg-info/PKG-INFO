@@ -1,0 +1,8 @@
+Metadata-Version: 2.1
+Name: vision-obstacle-detection
+Version: 0.0.0
+Summary: TODO: Package description
+Maintainer: zender_zhang
+Maintainer-email: zender_zhang@todo.todo
+License: TODO: License declaration
+Requires-Dist: setuptools
