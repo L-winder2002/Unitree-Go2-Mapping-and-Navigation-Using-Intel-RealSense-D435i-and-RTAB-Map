@@ -36,7 +36,7 @@
 | RTAB-Map | ≥ 0.21 |
 | RealSense SDK | ≥ 2.55 |
 | 相机型号 | Intel RealSense D435i |
-| 机器人平台 | Unitree Lite3 / Go2 |
+| 机器人平台 | Unitree Go2 |
 | GPU（可选） | NVIDIA RTX 系列 |
 
 ---
@@ -45,35 +45,35 @@
 
 ```bash
 # 1. 克隆仓库
-mkdir -p ~/rtabmap_ws/src
-cd ~/rtabmap_ws/src
 git clone https://github.com/L-winder2002/Unitree-Go2-Mapping-and-Navigation-Using-Intel-RealSense-D435i-and-RTAB-Map.git
+cd ./Unitree-Go2-Mapping-and-Navigation-Using-Intel-RealSense-D435i-and-RTAB-Map/
 
-# 2. 安装依赖
-cd ~/rtabmap_ws
-rosdep update
-rosdep install --from-paths src --ignore-src -y
-
-# 3. 编译
-colcon build --symlink-install
+# 2. 编译
+colcon build
 source install/setup.bash
-
-
+```
 ---
 
 ## 🔧 五、系统启动与使用
-
+首先将unitree go2（具体连接方法参考https://support.unitree.com/home/zh/developer/ROS2_service）和相机连接到电脑
+ 
 ```bash
-# 1. 克隆仓库
-mkdir -p ~/rtabmap_ws/src
-cd ~/rtabmap_ws/src
-git clone https://github.com/L-winder2002/Unitree-Go2-Mapping-and-Navigation-Using-Intel-RealSense-D435i-and-RTAB-Map.git
-
-# 2. 安装依赖
-cd ~/rtabmap_ws
-rosdep update
-rosdep install --from-paths src --ignore-src -y
-
-# 3. 编译
-colcon build --symlink-install
+ros2 topic list
+```
+正常情况下可以看到unitree相关话题
+接着启动深度相机和机器狗odom同步机制
+```bash
 source install/setup.bash
+ros2 launch go2_camera_bringup camera_odom_tf.launch.py
+```
+```bash
+ros2 topic list
+```
+现在可以看到/robot_odom_fixed机器狗odom对齐修正节点已经成功发布
+
+启动Rtabmap建图节点
+```bash
+ros2 launch rtabmap_launch rtabmap.launch.py
+```
+现在可以通过遥控操作机器狗行走进行建模了
+---
