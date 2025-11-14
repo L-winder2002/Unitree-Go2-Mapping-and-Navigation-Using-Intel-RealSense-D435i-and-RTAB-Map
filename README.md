@@ -4,7 +4,7 @@
 Intel RealSense D435i（RGB-D + IMU）
 Unitree Go2
 RTAB-Map RGB-D SLAM
-A 全局路径规划
+A*全局路径规划
 ROS 2 Humble（Ubuntu 22.04）
 系统提供了稳定的 建图、定位、路径规划、避障与 TF 关系管理，并可直接部署到 Unitree Go2 进行真实环境验证。 
 
