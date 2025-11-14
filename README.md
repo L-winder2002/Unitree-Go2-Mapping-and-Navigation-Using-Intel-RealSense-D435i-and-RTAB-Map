@@ -19,6 +19,8 @@ ROS 2 Humble（Ubuntu 22.04）
 
 经过优化的 TF 树、可靠的 QoS 配置以及多源数据同步机制，使机器人能在实际环境中进行连续、稳定的建图和导航。
 
+项目成果展示视频：
+
 ---
 
 ## 🧩 二、功能特点
@@ -79,10 +81,10 @@ RViz2 & rtabmapviz 可视化
 # 1. 克隆仓库
 git clone https://github.com/L-winder2002/Unitree-Go2-Mapping-and-Navigation-Using-Intel-RealSense-D435i-and-RTAB-Map.git
 ```
-**先将unitree_ros2文件夹移出到主目录，单独编译rtabmap_ws文件！！！**
+**先将unitree_navigation文件夹移出到主目录，单独编译rtabmap_ws文件！！！**
 ```bash
 # 2. 移出导航工作区，编译slam工作区
-mv ~/Unitree-Go2-Mapping-and-Navigation-Using-Intel-RealSense-D435i-and-RTAB-Map/unitree_ros ~/
+mv ~/Unitree-Go2-Mapping-and-Navigation-Using-Intel-RealSense-D435i-and-RTAB-Map/unitree_navigation ~/
 
 colcon build
 source install/setup.bash
@@ -92,13 +94,18 @@ source install/setup.bash
 
 ## 🔧 五、A*与导航模块配置
 首先按照宇树官方要求配置unitree_go2的ROS2服务接口：https://support.unitree.com/home/zh/developer/ROS2_service
-并且检查是否连接成功。
-
+并且检查是否连接成功。成功之后可以关闭节点。将导航节点的src合并到宇树ros2服务接口中编译。
+```bash
+mv ~/unitree_navigation/src ~/unitree_ros/
+cd ~/unitree_ros
+colcon build
+source install/setup.bash
+```
 ---
 
 ---
 
-## 🔧 五、系统启动与使用
+## 🔧 六、系统启动与使用
 首先将unitree go2（具体连接方法参考https://support.unitree.com/home/zh/developer/ROS2_service）和相机连接到电脑
  
 ```bash
@@ -107,6 +114,7 @@ ros2 topic list
 正常情况下可以看到unitree相关话题
 接着启动深度相机和机器狗odom同步机制
 ```bash
+cd ~/Unitree-Go2-Mapping-and-Navigation-Using-Intel-RealSense-D435i-and-RTAB-Map/rtabmap_ws
 source install/setup.bash
 ros2 launch go2_camera_bringup camera_odom_tf.launch.py
 ```
@@ -115,9 +123,29 @@ ros2 topic list
 ```
 现在可以看到/robot_odom_fixed机器狗odom对齐修正节点已经成功发布
 
-启动Rtabmap建图节点
+新建一个终端打开建图节点
 ```bash
+cd ~/Unitree-Go2-Mapping-and-Navigation-Using-Intel-RealSense-D435i-and-RTAB-Map/rtabmap_ws
+source install/setup.bash
 ros2 launch rtabmap_launch rtabmap.launch.py
 ```
-现在可以通过遥控操作机器狗行走进行建模了
+运行结果如下：
+![建图结果](images/建图节点运行结果.png)
+
+
+启动导航节点
+```bash
+cd ~/unitree_ros
+source install/setup.bash
+ros2 run vision_obstacle_detection vision_obstacle_detection_node
+```
+按m和q切换自动A*寻轨迹和手动模式，在手动模式下
+通过wsad，zc控制机器狗，在自动模式下要通过rviz2发布终点位置指令。
+```bash
+rviz2
+```
+打开rviz2之后先通过topic add相关话题一共四个话题，start，a_star_path，goal，/rtabmap/grid_prob_map，分别是起点，路线，终点和栅格地图。
+![rviz2结果](images/rviz2.png)
+通过2D Goal Pose按钮直接在地图上点击想要到达的终点即可
+
 ---
