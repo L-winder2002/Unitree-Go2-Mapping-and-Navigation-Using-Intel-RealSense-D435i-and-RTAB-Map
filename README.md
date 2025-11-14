@@ -12,7 +12,7 @@ ROS 2 Humble（Ubuntu 22.04）
 
 ---
 
-## 🚀 一、项目简介1
+## 🚀 一、项目简介
 
 本项目的主要目标是让 **Unitree Go2** 机器人能够利用 **Intel RealSense D435i** 相机进行 **实时环境感知与地图构建**。  
 系统成功解决了 RTAB-Map 常见的“相机数据与里程计时间戳不匹配”问题，实现了流畅的 SLAM 映射过程。  
@@ -79,14 +79,23 @@ RViz2 & rtabmapviz 可视化
 # 1. 克隆仓库
 git clone https://github.com/L-winder2002/Unitree-Go2-Mapping-and-Navigation-Using-Intel-RealSense-D435i-and-RTAB-Map.git
 ```
+**先将unitree_ros2文件夹移出到主目录，单独编译rtabmap_ws文件！！！**
+```bash
+# 2. 移出导航工作区，编译slam工作区
+mv ~/Unitree-Go2-Mapping-and-Navigation-Using-Intel-RealSense-D435i-and-RTAB-Map/unitree_ros ~/
 
-```
-cd ./Unitree-Go2-Mapping-and-Navigation-Using-Intel-RealSense-D435i-and-RTAB-Map/
-
-# 2. 编译
 colcon build
 source install/setup.bash
 ```
+
+---
+
+## 🔧 五、A*与导航模块配置
+首先按照宇树官方要求配置unitree_go2的ROS2服务接口：https://support.unitree.com/home/zh/developer/ROS2_service
+并且检查是否连接成功。
+
+---
+
 ---
 
 ## 🔧 五、系统启动与使用
