@@ -1,6 +1,12 @@
 # 🦾 基于 Intel RealSense D435i 与 RTAB-Map 的 Unitree Go2 建图与导航系统（ROS 2 Humble）
 
-本项目提供了一个基于 **ROS 2 Humble + Ubuntu 22.04** 的完整工作空间，用于实现 **Unitree Go2 四足机器人** 搭载 **Intel RealSense D435i 深度相机** 的实时 **RGB-D SLAM 建图与定位系统**。  
+本项目构建了一个完整的 四足机器人建图 + 定位 + 路径规划导航系统，基于：
+Intel RealSense D435i（RGB-D + IMU）
+Unitree Go2
+RTAB-Map RGB-D SLAM
+A 全局路径规划
+ROS 2 Humble（Ubuntu 22.04）
+系统提供了稳定的 建图、定位、路径规划、避障与 TF 关系管理，并可直接部署到 Unitree Go2 进行真实环境验证。 
 
 系统通过对 **深度相机与机器人内置里程计的时间同步** 与 **TF 坐标配置优化**，成功实现了在复杂环境下的 **稳定建图与精确定位**。
 
@@ -17,13 +23,39 @@
 
 ## 🧩 二、功能特点
 
-- ✅ 支持 D435i 的 **RGB-D + IMU** 数据流  
-- ✅ 实时 **2D/3D 环境建图**（RTAB-Map）  
-- ✅ **相机与 Unitree Go2 里程计数据同步**  
-- ✅ 完整的 **TF 坐标树**（`map → odom → base_link → camera_link`）  
-- ✅ 可靠的 **QoS 与时间同步机制**  
-- ✅ 可视化与地图保存（RTAB-Map Viz + RViz2）  
-- ✅ 支持 **Unitree Lite3 / Go2 实机验证**
+🔍 SLAM（建图 & 定位）
+RGB-D + IMU 输入（RealSense D435i）
+RTAB-Map 实时建图 & 回环检测
+发布 2D OccupancyGrid + 3D OctoMap
+稳定的 TF 树：
+map → odom → base_link → camera_link → camera_color_optical_frame
+解决 RealSense 时间戳不同步问题
+
+🚙 机器人运动与姿态
+订阅 Unitree Go2 里程计 /utlidar/robot_odom
+自带 /robot_odom_fixed 时间戳修复机制
+实现 RTAB-Map 与 Unitree odom 的稳定融合
+
+🗺 路径规划（A* Algorithm）
+基于 RTAB-Map 发布的 占据栅格图
+全局规划（Python 实现）自动避开障碍物
+输出优化后的全局路径（Path msg）
+
+🎯 轨迹跟随（Pure-Pursuit）
+实现 前视距离追踪算法
+自动计算局部目标点
+平滑控制机器狗姿态与运动方向
+
+🧭 导航系统（集成）
+SLAM → 地图
+A* → 全局路径
+CMD 速度输出 → Unitree Go2 实际运动
+
+🛠 辅助工具与特性
+完整 ROS 2 工作空间，可直接编译运行
+RViz2 & rtabmapviz 可视化
+所有节点支持参数化配置
+已在 Unitree Go2 + D435i 实机环境 测试通过
 
 ---
 
@@ -46,6 +78,9 @@
 ```bash
 # 1. 克隆仓库
 git clone https://github.com/L-winder2002/Unitree-Go2-Mapping-and-Navigation-Using-Intel-RealSense-D435i-and-RTAB-Map.git
+```
+
+```
 cd ./Unitree-Go2-Mapping-and-Navigation-Using-Intel-RealSense-D435i-and-RTAB-Map/
 
 # 2. 编译
